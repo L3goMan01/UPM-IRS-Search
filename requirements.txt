@@ -1,6 +1,6 @@
 streamlit
-pip install sentence_transformers
-pip install "pinecone[grpc]"
-pip install langchain_core
-pip install langchain
-pip install -U langgraph
+!pip install sentence_transformers
+!pip install "pinecone[grpc]"
+!pip install langchain_core
+!pip install langchain
+!pip install -U langgraph
