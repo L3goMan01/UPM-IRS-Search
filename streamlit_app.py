@@ -118,6 +118,7 @@ with col1:
         submitted = st.form_submit_button("Submit")
         if submitted:
             response = graph.invoke({"question": query})
+            print(response)
             st.markdown((response["answer"][0]["generated_text"].removeprefix("assistant")).strip())
             result_list = response["context"]
             # st.divider()
