@@ -9,10 +9,14 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, pipeline
 
 st.set_page_config(layout="wide")
-st.title("UPM IRS")
-st.write(
-    "Search through the UPM IRS' Computer Science thesis database."
+st.title("UPM IRS",anchor=False)
+st.markdown(
+    "*Search through the UPM IRS' Computer Science thesis database.*"
 )
+st.write("This search engine allows for keyword queries or natural language queries." \
+" Currently there are only Computer Science theses in the system. These theses span across topics like applications in the medical field, " \
+"information systems and Computer Science concepts.")
+st.write("Note: The system excels at topics where there are many papers on the topic or concept, otherwise it will struggle on topics that do not have any documents within the current system.")
 st.divider()
 
 from pinecone.grpc import PineconeGRPC as Pinecone
