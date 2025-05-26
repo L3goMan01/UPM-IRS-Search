@@ -1,1 +1,6 @@
 streamlit
+sentence_transformers
+"pinecone[grpc]"
+langchain_core
+langchain
+langgraph
