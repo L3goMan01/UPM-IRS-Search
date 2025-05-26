@@ -119,5 +119,6 @@ with col2:
     for doc in result_list:
         st.markdown("**"+doc.metadata.get("title").rstrip() + "**")
         st.text("by " + doc.metadata.get("author") + " | " + doc.metadata.get("month") + " " + str(doc.metadata.get("year")).replace(".0",""))
-        st.text('...'+doc.page_content+'...')
+        with st.expander("Check document snippet"):
+            st.text('...'+doc.page_content+'...')
         st.divider()
