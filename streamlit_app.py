@@ -79,23 +79,16 @@ def retrieve(state: State):
     return {"context": filtered_results, "retrieved": len(filtered_results)}
 
 def generate(state: State):
-    # docs_content = "\n\n".join(doc.page_content for doc in state["context"])
     given_context = state["context"][:5]
     docs_content = "".join(f"{i}. {doc.page_content}\n" for i, doc in enumerate(given_context, start=1))
-    # print(docs_content)
 
     tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
-    # pipe = pipeline("text-generation", model="meta-llama/Llama-3.2-1B-Instruct", tokenizer=tokenizer, max_new_tokens=500, return_full_text=False)
-    # pipe = pipeline("text-generation", model="titan5213/Llama-3.2-1B-IA3-Merged", tokenizer=tokenizer, max_new_tokens=500, return_full_text=False)
-    # pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, max_new_tokens=500, return_full_text=False)
 
     chat_prompt = tokenizer.apply_chat_template([
-        # {"role": "system", "content": "The given context below are document chunks retreived through vector similarity metrics. Provide a quick overview of the retrieved documents. Keep it brief."},
-        # {"role": "system", "content": "Given the context below, provide a quick overview. Keep it brief."},
-        {"role": "system", "content": "Answer the question below with the given context. Afterwards give a quick overview of the retrieved documents."},
-        # {"role": "system", "content": "Answer the question below with the given context, keep it brief. Afterwards give a quick overview of the retrieved documents. If the question is only asking to retrieve papers, skip straight to the overview."},
-        {"role": "user", "content": state["question"] + "\n\nContext:\n" + docs_content}
+        {"role": "system", "content": "Answer the question below with the given context. After answering the question, give a quick overview of the retrieved documents."},
+        {"role": "user", "content": "Question: "+state["question"] + "\n\nContext:\n" + docs_content}
     ], tokenize=False, add_generation_prompt=False)
+    print(chat_prompt)
 
     response = api_call({
         "inputs": f"{chat_prompt}",
@@ -118,21 +111,13 @@ with col1:
         submitted = st.form_submit_button("Submit")
         if submitted:
             response = graph.invoke({"question": query})
-            print(response)
             st.markdown((response["answer"][0]["generated_text"].removeprefix("assistant")).strip())
             result_list = response["context"]
-            # st.divider()
-            # st.text("Found " + str(response["retrieved"]) + " documents.")
-            # for doc in response["context"]:
-            #     st.markdown("**"+doc.metadata.get("title").rstrip() + "** by " + doc.metadata.get("author"))
-            #     st.text(doc.metadata.get("month") + " " + str(doc.metadata.get("year")).replace(".0",""))
-            #     st.text('...'+doc.page_content+'...')
-            #     st.divider()
 
 with col2:
     st.text("Found " + str(len(result_list)) + " documents.")
     for doc in result_list:
-        st.markdown("**"+doc.metadata.get("title").rstrip() + "** by " + doc.metadata.get("author"))
-        st.text(doc.metadata.get("month") + " " + str(doc.metadata.get("year")).replace(".0",""))
+        st.markdown("**"+doc.metadata.get("title").rstrip() + "**")
+        st.text("by " + doc.metadata.get("author") + " | " + doc.metadata.get("month") + " " + str(doc.metadata.get("year")).replace(".0",""))
         st.text('...'+doc.page_content+'...')
         st.divider()
