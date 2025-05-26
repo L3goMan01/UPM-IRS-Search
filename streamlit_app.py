@@ -46,7 +46,7 @@ def retrieve(state: State):
     model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
     user_input = state["question"]
 
-    score_cutoff=0.2
+    score_cutoff=0.35
 
     embedded_input = model.encode(user_input)
 
@@ -92,7 +92,6 @@ def generate(state: State):
         {"role": "system", "content": "Answer the question below with the given context. After answering the question, give a quick overview of the retrieved documents."},
         {"role": "user", "content": "Question: "+state["question"] + "\n\nContext:\n" + docs_content}
     ], tokenize=False, add_generation_prompt=False)
-    print(chat_prompt)
 
     response = api_call({
         "inputs": f"{chat_prompt}",
@@ -119,8 +118,9 @@ with col1:
             result_list = response["context"]
 
 with col2:
-    st.text("Found " + str(len(result_list)) + " documents.")
+    st.text("Found " + str(len(result_list)) + " documents!")
     for doc in result_list:
+        st.text(doc.metadata.get("score"))
         st.markdown("**"+doc.metadata.get("title").rstrip() + "**")
         st.text("by " + doc.metadata.get("author") + " | " + doc.metadata.get("month") + " " + str(doc.metadata.get("year")).replace(".0",""))
         with st.expander("Check document snippet"):
