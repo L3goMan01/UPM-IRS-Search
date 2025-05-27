@@ -16,6 +16,7 @@ st.markdown(
 st.write("This search engine allows for keyword queries or natural language queries." \
 " Currently there are only Computer Science theses in the system. These theses span across topics like applications in the medical field, " \
 "information systems and Computer Science concepts.")
+st.write('Some sample queries could be: "Theses about information management systems", "What is an Epitope", "How to perform the CYK algorithm".')
 st.write("Note: The system excels at topics where there are many papers on the topic or concept, otherwise it will struggle on topics that do not have any documents within the current system.")
 st.divider()
 
@@ -83,6 +84,9 @@ def retrieve(state: State):
     return {"context": filtered_results, "retrieved": len(filtered_results)}
 
 def generate(state: State):
+    if len(state["context"]) == 0: 
+        return {"answer": "Sorry, I could not find any papers in my data :("}
+    
     given_context = state["context"][:5]
     docs_content = "".join(f"{i}. {doc.page_content}\n" for i, doc in enumerate(given_context, start=1))
 
@@ -114,7 +118,10 @@ with col1:
         submitted = st.form_submit_button("Submit")
         if submitted:
             response = graph.invoke({"question": query})
-            st.markdown((response["answer"][0]["generated_text"].removeprefix("assistant")).strip())
+            if len(response["context"]) > 0:
+                st.markdown((response["answer"][0]["generated_text"].removeprefix("assistant")).strip())
+            else:
+                st.text(response["answer"])
             result_list = response["context"]
 
 with col2:
