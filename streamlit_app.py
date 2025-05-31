@@ -118,10 +118,13 @@ with col1:
         submitted = st.form_submit_button("Submit")
         if submitted:
             response = graph.invoke({"question": query})
-            if len(response["context"]) > 0:
-                st.markdown((response["answer"][0]["generated_text"].removeprefix("assistant")).strip())
-            else:
-                st.text(response["answer"])
+            try:
+                if len(response["context"]) > 0:
+                    st.markdown((response["answer"][0]["generated_text"].removeprefix("assistant")).strip())
+                else:
+                    st.text(response["answer"])
+            except:
+                st.error("LLM server is down! Please contact Tim about server availability.\nError Message:\n"+response["answer"]["error"])
             result_list = response["context"]
 
 with col2:
