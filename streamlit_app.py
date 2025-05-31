@@ -17,7 +17,7 @@ st.write("This search engine allows for keyword queries or natural language quer
 " Currently there are only Computer Science theses in the system. These theses span across topics like applications in the medical field, " \
 "information systems and Computer Science concepts.")
 st.write('Some sample queries could be: "Theses about information management systems", "What is an Epitope", "How to perform the CYK algorithm".')
-st.write("Note: The system excels at topics where there are many papers on the topic or concept, otherwise it will struggle on topics that do not have any documents within the current system.")
+st.markdown("Notes: \n- The system excels at topics where there are many papers on the topic or concept, otherwise it will struggle on topics that do not have any documents within the current system. \n- The primary purpose of this system is to be a search engine and NOT a chatbot. It will not remember the previous questions you ask it, nor can I guarantee its responses to chatbot question be what you expect.")
 st.divider()
 
 from pinecone.grpc import PineconeGRPC as Pinecone
